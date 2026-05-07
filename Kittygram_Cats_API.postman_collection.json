@@ -1,0 +1,314 @@
+{
+  "info": {
+    "name": "Kittygram Cats API",
+    "description": "Коллекция запросов для тестирования API проекта Kittygram Cats",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Аутентификация",
+      "item": [
+        {
+          "name": "1.1 Получить JWT токен",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.access) {",
+                  "    pm.collectionVariables.set('token', json.access);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/jwt/create/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "jwt", "create", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Кошки",
+      "item": [
+        {
+          "name": "2.1 Получить список всех кошек",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cats/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""]
+            }
+          }
+        },
+        {
+          "name": "2.2 Фильтрация кошек по цвету",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cats/?color=Gray",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""],
+              "query": [
+                { "key": "color", "value": "Gray" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.3 Поиск кошки по имени",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cats/?search=Мурка",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""],
+              "query": [
+                { "key": "search", "value": "Мурка" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.4 Создать кошку",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.collectionVariables.set('cat_id', json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Мурка\",\n  \"color\": \"Gray\",\n  \"birth_year\": 2020,\n  \"achievements\": [\n    {\"achievement_name\": \"Чемпион по сну\"}\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cats/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""]
+            }
+          }
+        },
+        {
+          "name": "2.5 Получить кошку по ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cats/{{cat_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", "{{cat_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "2.6 Обновить кошку (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Black\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cats/{{cat_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", "{{cat_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "2.7 Удалить кошку",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cats/{{cat_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", "{{cat_id}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Достижения",
+      "item": [
+        {
+          "name": "3.1 Получить список достижений",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/achievements/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "achievements", ""]
+            }
+          }
+        },
+        {
+          "name": "3.2 Создать достижение",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"achievement_name\": \"Покоритель диванов\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/achievements/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "achievements", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Пользователи",
+      "item": [
+        {
+          "name": "4.1 Получить список пользователей",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Отрицательные тесты",
+      "item": [
+        {
+          "name": "5.1 Ошибка валидации — неверный год рождения (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Black\",\n  \"birth_year\": 1800\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cats/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""]
+            }
+          }
+        },
+        {
+          "name": "5.2 Создание без токена — доступ запрещён (401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Black\",\n  \"birth_year\": 2020\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cats/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", ""]
+            }
+          }
+        },
+        {
+          "name": "5.3 Редактирование чужой кошки — запрет (403)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"White\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cats/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cats", "1", ""]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cat_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
