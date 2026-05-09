@@ -1,21 +1,37 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: kittygram
+      POSTGRES_USER: kittygram_user
+      POSTGRES_PASSWORD: kittygram_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kittygram_user -d kittygram"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
-    ports:
-      - "8001:8001"
     environment:
-      - DEBUG=True
+      - DEBUG=False
       - SECRET_KEY=django-insecure-test-key
       - ALLOWED_HOSTS=localhost,127.0.0.1,web
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=kittygram
+      - DB_USER=kittygram_user
+      - DB_PASSWORD=kittygram_pass
+      - DB_HOST=db
+      - DB_PORT=5432
     volumes:
-      - .:/app
       - static_volume:/app/staticfiles
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py shell < /app/create_test_data.py &&
-             python manage.py runserver 0.0.0.0:8001"
+    depends_on:
+      db:
+        condition: service_healthy
 
   nginx:
     image: nginx:alpine
@@ -28,4 +44,5 @@ services:
       - web
 
 volumes:
+  postgres_data:
   static_volume:

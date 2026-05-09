@@ -19,5 +19,5 @@ COPY . .
 # Collect static files
 RUN python manage.py collectstatic --noinput || true
 
-# Run migrations and start server
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8001"]
+# Run migrations and start gunicorn
+CMD ["sh", "-c", "python manage.py migrate && gunicorn kittygram2.wsgi:application --bind 0.0.0.0:8001 --workers 2"]

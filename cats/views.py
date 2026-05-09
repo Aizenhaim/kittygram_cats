@@ -5,6 +5,7 @@ Last updated: 2026-05-05
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Achievement, Cat, User
@@ -21,6 +22,7 @@ class CatViewSet(viewsets.ModelViewSet):
     search_fields = ['name']
     ordering_fields = ['name', 'birth_year']
     ordering = ['name']
+    pagination_class = PageNumberPagination
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
