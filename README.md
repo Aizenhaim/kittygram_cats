@@ -64,9 +64,10 @@ docker-compose up -d
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python load_test_data.py
+docker-compose exec web python manage.py collectstatic --noinput
 ```
 
-**Приложение доступно на:** `http://localhost:8001`
+**Приложение доступно на:** `http://localhost`
 
 ### Полезные команды Docker
 
@@ -99,7 +100,7 @@ docker-compose down -v
 
 | Адрес | Описание |
 |---|---|
-| `http://localhost:8001/api/` | API |
-| `http://localhost:8001/swagger/` | Документация Swagger |
-| `http://localhost:8001/redoc/` | Документация ReDoc |
-| `http://localhost:8001/admin/` | Админ-панель |
+| `http://localhost/api/` | API |
+| `http://localhost/swagger/` | Документация Swagger |
+| `http://localhost/redoc/` | Документация ReDoc |
+| `http://localhost/admin/` | Админ-панель |
