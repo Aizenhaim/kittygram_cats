@@ -56,16 +56,17 @@ python3 manage.py runserver 8001
 ```bash
 git clone https://github.com/Aizenhaim/kittygram_cats.git
 cd kittygram_cats
-
 cp .env.example .env
-# Открой .env и заполни SECRET_KEY и DB_PASSWORD своими значениями
+notepad .env
+```
 
+Заполни `SECRET_KEY` и `DB_PASSWORD` своими значениями, сохрани и закрой блокнот. Потом:
+
+```bash
 docker-compose up -d
-
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python load_test_data.py
-docker-compose exec web python manage.py collectstatic --noinput
 ```
 
 **Приложение доступно на:** `http://localhost`
