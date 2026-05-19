@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'djoser',
     'cats.apps.CatsConfig',
+    'travels.apps.TravelsConfig',
 ]
 
 MIDDLEWARE = [
