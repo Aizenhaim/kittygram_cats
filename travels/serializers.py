@@ -2,6 +2,7 @@ import datetime as dt
 
 from rest_framework import serializers
 
+from cats.models import Cat
 from cats.serializers import CatSerializer
 from .models import Destination, Travel
 
@@ -18,7 +19,7 @@ class TravelSerializer(serializers.ModelSerializer):
         queryset=Destination.objects.all(), source='destination', write_only=True
     )
     cat_detail = CatSerializer(source='cat', read_only=True)
-    cat = serializers.PrimaryKeyRelatedField(read_only=True)
+    cat = serializers.PrimaryKeyRelatedField(queryset=Cat.objects.all())
 
     class Meta:
         model = Travel
